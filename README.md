@@ -1,4 +1,4 @@
-<p align="center"><img src="docs/screenshots/logo.svg" width="88" alt="LiteArk"></p>
+<p align="center"><img src="web/public/logo.svg" width="88" alt="LiteArk"></p>
 
 <h1 align="center">轻舟 LiteArk · 私有网盘</h1>
 
@@ -14,8 +14,6 @@
   <img alt="SQLite" src="https://img.shields.io/badge/SQLite-single%20file-003B57">
   <img alt="License" src="https://img.shields.io/badge/License-MIT-blue">
 </p>
-
-![文件管理](docs/screenshots/files.png)
 
 轻舟是一套可完全内网离线部署的私有网盘，采用 **单 fat jar** 交付：前端构建产物内嵌在 jar 中，内网服务器只需预装 JDK 1.8，无需 Maven、无需拉取任何依赖、无需单独部署前端或 Nginx。
 
