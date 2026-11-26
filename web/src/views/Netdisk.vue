@@ -93,13 +93,15 @@
               <template #default="{ row }">{{ row.isDir ? '—' : size(row.size) }}</template>
             </el-table-column>
             <el-table-column prop="updatedAt" label="修改时间" width="165" v-if="!isMobile" />
-            <el-table-column label="操作" width="300" fixed="right">
+            <el-table-column label="操作" width="380" fixed="right">
               <template #default="{ row }">
+                <el-button v-if="has(row, 'download')" link type="primary" size="small" @click.stop="downloadItem(row)">下载</el-button>
                 <el-button v-if="has(row, 'edit')" link type="primary" size="small" @click.stop="openRename(row)">重命名</el-button>
                 <el-button v-if="row.isDir && !row.granted && has(row, 'edit')" link type="primary" size="small" @click.stop="openGrant(row)">授权</el-button>
                 <el-button v-if="!row.granted && canShare(row)" link type="primary" size="small" @click.stop="openShareOne(row)">分享</el-button>
                 <el-button v-if="canEdit(row) && has(row, 'edit')" link type="primary" size="small" @click.stop="openEditor(row)">编辑</el-button>
                 <el-button link type="primary" size="small" v-if="!row.isDir" @click.stop="preview(row)">预览</el-button>
+                <el-button v-if="has(row, 'edit')" link type="danger" size="small" @click.stop="deleteItem(row)">删除</el-button>
               </template>
             </el-table-column>
             <template #empty><el-empty description="此目录为空" /></template>
@@ -547,26 +549,48 @@ async function deleteSelected() {
   } catch (e) { if (e !== 'cancel') ElMessage.error(e.message) }
 }
 
+// 打包下载：后端 POST /download-zip
+async function downloadZip(ids) {
+  try {
+    const res = await fetch(import.meta.env.BASE_URL.replace(/\/$/, '') + '/api/files/download-zip', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + localStorage.getItem('liteark_token') },
+      body: JSON.stringify({ ids }),
+    })
+    if (!res.ok) throw new Error('请求失败（' + res.status + '）')
+    const blob = await res.blob()
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob); a.download = 'liteark.zip'; a.click()
+    URL.revokeObjectURL(a.href)
+    ElMessage.success('正在下载')
+  } catch (e) { ElMessage.error('打包失败: ' + e.message) }
+}
+
 // 下载：后端 POST /download-zip
 async function downloadSelected() {
   const hasDir = selected.value.some((f) => f.isDir)
   if (hasDir) {
-    try {
-      const res = await fetch(import.meta.env.BASE_URL.replace(/\/$/, '') + '/api/files/download-zip', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + localStorage.getItem('liteark_token') },
-        body: JSON.stringify({ ids: selectedIds.value }),
-      })
-      const blob = await res.blob()
-      const a = document.createElement('a')
-      a.href = URL.createObjectURL(blob); a.download = 'liteark.zip'; a.click()
-      URL.revokeObjectURL(a.href)
-      ElMessage.success('正在下载')
-    } catch (e) { ElMessage.error('打包失败: ' + e.message) }
+    await downloadZip(selectedIds.value)
   } else {
     if (isMobile.value) ElMessage.info('大批量文件建议在电脑端操作')
     selected.value.forEach((f) => window.open(fileApi.downloadUrl(f.id), '_blank'))
   }
+}
+
+// 单项下载（列表操作栏 / 移动面板）：文件直接下载，文件夹打包
+function downloadItem(row) {
+  if (!row) return
+  if (row.isDir) downloadZip([row.id])
+  else window.open(fileApi.downloadUrl(row.id), '_blank')
+}
+
+// 单项删除（列表操作栏 / 移动面板）
+async function deleteItem(row) {
+  if (!row) return
+  try {
+    await ElMessageBox.confirm(`删除「${row.name}」？`, '提示', { type: 'warning' })
+    await fileApi.remove([row.id]); ElMessage.success('已移入回收站'); loadAll()
+  } catch (e) { if (e !== 'cancel') ElMessage.error(e.message) }
 }
 
 // 分享
@@ -963,8 +987,8 @@ async function doAction(a) {
   else if (a === 'preview') preview(row)
   else if (a === 'share') openShareOne(row)
   else if (a === 'grant') openGrant(row)
-  else if (a === 'download') window.open(fileApi.downloadUrl(row.id), '_blank')
-  else if (a === 'delete') { selected.value = [row]; await deleteSelected() }
+  else if (a === 'download') downloadItem(row)
+  else if (a === 'delete') deleteItem(row)
 }
 </script>
 
