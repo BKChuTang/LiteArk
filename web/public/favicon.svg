@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-label="轻舟 LiteArk">
+  <title>轻舟 LiteArk</title>
+  <defs>
+    <linearGradient id="f-sail" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0" stop-color="#43bead"/>
+      <stop offset="0.55" stop-color="#2b9082"/>
+      <stop offset="1" stop-color="#1b6559"/>
+    </linearGradient>
+    <linearGradient id="f-hull" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1b6559"/>
+      <stop offset="1" stop-color="#123f39"/>
+    </linearGradient>
+  </defs>
+  <!-- 小尺寸专用：透明底、去掉水波，图形放大以适配 16–32px -->
+  <rect x="126" y="30" width="15" height="138" rx="7.5" fill="#1b6559"/>
+  <path d="M141 38 C196 74 216 120 216 168 L141 168 Z" fill="url(#f-sail)"/>
+  <path d="M126 78 C92 104 72 136 72 168 L126 168 Z" fill="url(#f-sail)" opacity="0.88"/>
+  <path d="M24 176 C62 194 198 194 236 176 L206 216 Q196 228 180 228 H80 Q64 228 54 216 Z" fill="url(#f-hull)"/>
+</svg>

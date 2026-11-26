@@ -1,0 +1,57 @@
+server:
+  port: ${LITEARK_PORT:8080}
+
+spring:
+  application:
+    name: liteark
+  datasource:
+    driver-class-name: org.sqlite.JDBC
+    url: jdbc:sqlite:${liteark.data-dir}/liteark.db
+    hikari:
+      maximum-pool-size: 1
+      connection-timeout: 30000
+  servlet:
+    multipart:
+      max-file-size: ${LITEARK_MAX_FILE:2048MB}
+      max-request-size: ${LITEARK_MAX_REQUEST:4096MB}
+  mvc:
+    static-path-pattern: /**
+
+mybatis-plus:
+  global-config:
+    db-config:
+      id-type: auto
+  configuration:
+    map-underscore-to-camel-case: true
+
+liteark:
+  # 数据库与文件实体根目录（外置配置可覆盖）
+  data-dir: ${LITEARK_DATA_DIR:./data}
+  files-dir: ${LITEARK_FILES_DIR:${liteark.data-dir}/files}
+  temp-dir: ${LITEARK_TEMP_DIR:${liteark.data-dir}/temp}
+  # JWT（部署时必须外置覆盖）
+  jwt-secret: ${LITEARK_JWT_SECRET:liteark-dev-secret-change-me-in-production}
+  jwt-expire-ms: 604800000
+  # 上限：单文件 2GB、个人默认 20GB（需求 §10 Q-08）
+  max-file-size: ${LITEARK_MAX_FILE_BYTES:2147483648}
+  default-quota: 21474836480
+  # 同名冲突默认策略（需求 §10 Q-09）
+  conflict-strategy: rename
+  # 后台 IP 白名单开关（需求 §8.7）
+  admin-ip-whitelist-enabled: false
+  admin-ip-whitelist: 127.0.0.1,::1
+
+# 接口文档默认关闭；内网需要时外置配置改为 true
+springdoc:
+  api-docs:
+    enabled: ${LITEARK_API_DOCS:false}
+  swagger-ui:
+    enabled: ${LITEARK_API_DOCS:false}
+
+logging:
+  level:
+    com.liteark: INFO
+  file:
+    name: ${LITEARK_LOG_FILE:./logs/liteark.log}
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"

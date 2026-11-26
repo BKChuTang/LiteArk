@@ -1,0 +1,42 @@
+# ---- Java / Maven ----
+target/
+*.jar
+*.war
+*.class
+.mvn/
+mvnw
+mvnw.cmd
+
+# ---- 前端 ----
+node_modules/
+web/dist/
+web/.vite/
+npm-debug.log*
+yarn-error.log*
+
+# 前端构建产物会注入到这里，不入库
+src/main/resources/static/
+
+# ---- 运行时数据（绝不可提交）----
+data/
+logs/
+*.db
+*.db-shm
+*.db-wal
+conf/application.yml
+application-local.yml
+*.log
+
+# ---- IDE / 系统 ----
+.idea/
+.vscode/
+*.iml
+*.swp
+.DS_Store
+Thumbs.db
+
+# ---- 本地环境变量与密钥 ----
+.env
+.env.local
+*.pem
+*.key

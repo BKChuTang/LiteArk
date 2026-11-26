@@ -1,0 +1,48 @@
+# 轻舟 LiteArk V1.1 外置配置
+# 部署时放置于 /opt/liteark/conf/application.yml，随 jar 外置覆盖
+server:
+  port: ${LITEARK_PORT:8080}
+
+spring:
+  datasource:
+    driver-class-name: org.sqlite.JDBC
+    url: jdbc:sqlite:${liteark.data-dir}/liteark.db
+    hikari:
+      maximum-pool-size: 1
+      connection-timeout: 30000
+  servlet:
+    multipart:
+      max-file-size: ${LITEARK_MAX_FILE:2048MB}
+      max-request-size: ${LITEARK_MAX_REQUEST:4096MB}
+
+# 接口文档（默认关闭；内网如需 swagger-ui 改为 true）
+springdoc:
+  api-docs:
+    enabled: ${LITEARK_API_DOCS:false}
+  swagger-ui:
+    enabled: ${LITEARK_API_DOCS:false}
+
+mybatis-plus:
+  global-config:
+    db-config:
+      id-type: auto
+  configuration:
+    map-underscore-to-camel-case: true
+
+liteark:
+  data-dir: ${LITEARK_DATA_DIR:/opt/liteark/data}
+  files-dir: ${LITEARK_FILES_DIR:/opt/liteark/data/files}
+  temp-dir: ${LITEARK_TEMP_DIR:/opt/liteark/data/temp}
+  # 部署时必须替换为长随机字符串
+  jwt-secret: ${LITEARK_JWT_SECRET:CHANGE-ME-IN-PRODUCTION-USE-LONG-RANDOM-STRING}
+  jwt-expire-ms: 604800000
+  max-file-size: 2147483648
+  default-quota: 21474836480
+  conflict-strategy: rename
+  # 后台 IP 白名单（如内网需限制）
+  admin-ip-whitelist-enabled: false
+  admin-ip-whitelist: 127.0.0.1,::1
+
+logging:
+  file:
+    name: /opt/liteark/logs/liteark.log

@@ -1,0 +1,105 @@
+:root {
+  --la-primary: #1f6b60;
+  --la-primary-light: #2b8a7d;
+  --la-accent: #3aaf9f;
+  --la-bg: #f3f6f6;
+  --la-surface: #ffffff;
+  --la-border: #e2e9e8;
+  --la-text: #243330;
+  --la-muted: #7c8b88;
+  --la-radius: 10px;
+  --la-sidebar: 220px;
+  --la-tabbar: 0px;
+  --la-touch: 44px;
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body, #app { height: 100%; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  color: var(--la-text);
+  background: var(--la-bg);
+  font-size: 14px;
+  overflow-x: hidden;
+}
+button, input, textarea, select { font-family: inherit; }
+a { color: var(--la-primary); text-decoration: none; }
+
+.el-button--primary {
+  --el-button-bg-color: var(--la-primary);
+  --el-button-border-color: var(--la-primary);
+  --el-button-hover-bg-color: var(--la-primary-light);
+  --el-button-hover-border-color: var(--la-primary-light);
+}
+
+.page-container { padding: 20px 24px; }
+.page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; flex-wrap: wrap; gap: 12px; }
+.page-title { font-size: 20px; font-weight: 600; margin: 0; }
+
+.stat-card { background: var(--la-surface); border: 1px solid var(--la-border); border-radius: var(--la-radius); padding: 20px; }
+.stat-card .label { color: var(--la-muted); font-size: 13px; }
+.stat-card .value { font-size: 28px; font-weight: 600; color: var(--la-primary); margin-top: 8px; }
+
+/* ========== Tablet: 768–1199 ========== */
+@media (max-width: 1199px) {
+  :root { --la-sidebar: 0px; }
+}
+
+/* ========== Mobile: < 768 ========== */
+@media (max-width: 767px) {
+  :root { --la-tabbar: 58px; }
+  body { font-size: 13px; }
+  .page-container { padding: 14px 12px calc(var(--la-tabbar) + 20px); }
+  .page-title { font-size: 18px; }
+  .page-header { margin-bottom: 14px; }
+
+  /* 移动端表单：单列纵向、label 上置、按钮通栏 ≥44px */
+  .el-form-item { display: block; margin-bottom: 16px; }
+  .el-form-item__label { display: block; text-align: left; padding: 0 0 6px !important; height: auto !important; line-height: 1.4 !important; }
+  .el-form-item__content { margin-left: 0 !important; }
+  .el-button { min-height: var(--la-touch); }
+  .el-input__inner, .el-select__wrapper { min-height: var(--la-touch); }
+  .el-dialog { width: calc(100vw - 24px) !important; }
+  .el-drawer { width: 100% !important; }
+  .el-table { font-size: 12px; }
+  .el-table th, .el-table td { padding: 8px 4px !important; }
+}
+
+/* 触屏热区兜底 */
+@media (pointer: coarse) {
+  .el-button { min-height: var(--la-touch); min-width: var(--la-touch); }
+  .el-menu-item { min-height: var(--la-touch); }
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #cbd6d4; border-radius: 3px; }
+
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
+
+/* 侧栏菜单（h() 内联组件渲染，scoped 不生效）：透出父级深色背景 + 浅色文字 */
+ul.el-menu.side-menu { background-color: transparent !important; border-right: none !important; }
+ul.el-menu.side-menu .el-menu-item { color: rgba(255,255,255,.72) !important; margin: 4px 10px; border-radius: 6px; }
+ul.el-menu.side-menu .el-menu-item:hover { background-color: rgba(255,255,255,.08) !important; color: #fff !important; }
+ul.el-menu.side-menu .el-menu-item.is-active { background-color: rgba(255,255,255,.16) !important; color: #fff !important; }
+
+/*
+ * 侧栏品牌区同样由 h() 渲染，scoped 样式命中不到，统一在此定义。
+ * .la-side 用于前台侧栏，.admin-side 用于管理后台（更窄、名称竖排）。
+ */
+.side-inner { display: flex; flex-direction: column; height: 100%; }
+.side-inner .side-menu { flex: 1; padding-top: 12px; }
+.side-brand {
+  height: 64px; display: flex; align-items: center; gap: 10px; flex: 0 0 64px;
+  padding: 0 22px; color: #fff; cursor: pointer;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+}
+.side-brand .brand-logo { border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+.side-brand .name { font-size: 19px; font-weight: 600; line-height: 1.1; white-space: nowrap; }
+.side-brand small { font-size: 12px; font-weight: 300; opacity: .7; }
+.admin-side .side-brand { padding: 0 20px; }
+.admin-side .side-brand .name { font-size: 18px; display: flex; flex-direction: column; line-height: 1.2; }
+.admin-side .side-brand small { font-size: 11px; opacity: .6; }
+/* 管理端保留品牌绿高亮，和深蓝灰底色区分更明确 */
+.admin-side ul.el-menu.side-menu .el-menu-item.is-active { background-color: #1f6b60 !important; }
+
