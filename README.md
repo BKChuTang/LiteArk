@@ -23,25 +23,90 @@
 - 交付形态：`target/liteark.jar`（约 60MB，含前端 dist 与全部依赖）+ 一个外置配置目录
 - 访问入口：前台网盘 `/`、管理后台 `/admin/overview`、免登录共享页 `/s/{token}`
 
-## 一、快速启动
+## 一、环境要求
 
-### 1. 本地/外网开发
+| 依赖 | 版本 | 说明 |
+|---|---|---|
+| OpenJDK | **1.8.x** | 后端编译与运行。`pom.xml` 锁定 source/target 1.8，用 17+ 编译会失败 |
+| Maven | 3.6+ | 后端构建 |
+| Node.js | 18+ | 前端构建，推荐 20 LTS |
+| npm | 9+ | 前端依赖安装 |
+| LibreOffice | 7.x（可选） | Office 文档转 PDF 预览。不装则降级为 Apache POI 渲染只读 HTML（旧版 doc/xls/ppt 不支持） |
+
+生产机只需 JDK 1.8（fat jar 已含全部依赖）；上表其余项仅开发机需要。
+
+## 二、拉取代码与本地开发
+
+### 2.1 拉取代码
+
 ```bash
-# 前端开发（前端 5173，代理后端 8080）
-cd web && npm install && npm run dev
+# SSH（推荐）
+git clone git@github.com:BKChuTang/LiteArk.git
+cd LiteArk
 
-# 后端开发
-export JAVA_HOME=<JDK8路径>
-mvn spring-boot:run
-
-# 一键构建 fat jar（先构建前端再打 jar）
-cd web && npm run build && cd ..
-rm -rf src/main/resources/static/* && cp -r web/dist/* src/main/resources/static/
-mvn clean package -DskipTests
-# 产物：target/liteark.jar
+# 或 HTTPS
+git clone https://github.com/BKChuTang/LiteArk.git
+cd LiteArk
 ```
 
-### 2. 内网生产部署（干净机器）
+### 2.2 启动后端（8080）
+
+```bash
+export JAVA_HOME=/path/to/jdk1.8      # 必须 1.8
+mvn -v                                # 确认 Maven 实际使用的是 JDK8
+
+mvn spring-boot:run
+# 或先打包再运行
+mvn clean package -DskipTests && java -jar target/liteark.jar
+```
+
+- 默认端口 **8080**，改端口：`--server.port=9090` 或环境变量 `LITEARK_PORT=9090`
+- 首次启动自动建表、初始化角色与账号（见 3.3）
+- 数据库默认落在**启动目录下的 `./data/liteark.db`**，可用 `--liteark.data-dir=/your/path` 指定
+- 想清库重来：停服务，删掉 `data/` 目录即可
+
+### 2.3 启动前端（5173，热更新）
+
+```bash
+cd web
+npm install
+npm run dev
+```
+
+浏览器打开 <http://localhost:5173>。Vite 已配好 `/api → http://localhost:8080` 代理，**所以后端要先起来**，否则登录和列表全部报错。
+
+### 2.4 联调说明
+
+- 开发态保持 base 为默认 `/`，**不要在 dev 时设置 `VITE_BASE`**——否则请求路径变成 `/liteark/api/...`，匹配不上 vite 的 `/api` 代理规则
+- 前端改动热更新；后端改 Java 需重启（可自行引入 `spring-boot-devtools`）
+- 此时访问 `http://localhost:8080` 会 404：`src/main/resources/static/` 是构建注入目录，没跑过前端构建就是空的，属正常现象，开发期一律走 5173
+
+`npm install` 若报 `EALLOWREMOTE` 或试图拉取镜像站地址，在 `web/.npmrc` 固定官方源后删掉旧 lockfile 重装：
+
+```
+registry=https://registry.npmjs.org/
+allow-remote=all
+```
+
+### 2.5 构建 fat jar
+
+```bash
+cd web && npm run build && cd ..
+rm -rf src/main/resources/static/*
+cp -R web/dist/. src/main/resources/static/
+mvn clean package -DskipTests
+# 产物：target/liteark.jar（约 60MB，前端 dist + 全部依赖都在里面）
+```
+
+两个容易踩的坑：
+
+- **必须带 `clean`**。只跑 `mvn package` 会保留 `target/classes/static/` 里上一次的前端产物，新旧 chunk 一起打进 jar，表现为「改了页面却没生效」。
+- `cp -R web/dist/.` 结尾的 `/.` 别省。写成 `web/dist/*` 会漏掉以点开头的文件。
+
+## 三、生产部署
+
+### 3.1 根路径部署（内网推荐）
+
 ```bash
 # 前提：仅预装 OpenJDK 1.8（java -version 显示 1.8.x）
 mkdir -p /opt/liteark/{conf,data,logs}
@@ -55,7 +120,7 @@ java -jar /opt/liteark/liteark.jar \
 
 首次启动自动完成：创建数据目录、建表、初始化角色与账号。浏览器访问 `http://服务器IP:8080`。
 
-### 2.1 部署到子路径（如 `https://example.com/liteark/`）
+### 3.2 子路径部署（如 `https://example.com/liteark/`）
 
 前端资源与接口路径全部跟随 vite `base`，构建时指定即可，无需改代码：
 
@@ -63,7 +128,7 @@ java -jar /opt/liteark/liteark.jar \
 cd web
 VITE_BASE=/liteark/ npm run build      # 不带该变量则默认部署在根路径 `/`
 cd ..
-rm -rf src/main/resources/static/* && cp -r web/dist/* src/main/resources/static/
+rm -rf src/main/resources/static/* && cp -R web/dist/. src/main/resources/static/
 mvn clean package -DskipTests
 ```
 
@@ -84,7 +149,7 @@ location /liteark/ {
 
 > 注意：`proxy_pass` 末尾的 `/` 不能省，否则前缀不会被剥离。
 
-### 3. 初始账号
+### 3.3 初始账号
 
 | 账号 | 密码 | 角色 |
 |------|------|------|
@@ -93,7 +158,7 @@ location /liteark/ {
 
 **部署后第一步：修改 admin 密码，并把外置配置中的 `liteark.jwt-secret` 改为长随机字符串。**
 
-## 二、配置
+## 四、配置
 
 配置分三层，优先级从高到低：
 
@@ -119,7 +184,7 @@ location /liteark/ {
 
 完整配置说明见 `docs/配置说明.md`。
 
-## 三、功能概览
+## 五、功能概览
 
 **前台网盘**：登录/注册、目录树、文件/文件夹增删改查、复制/剪切/粘贴（含文件夹递归）、回收站与还原、小文件直传与**大文件分片断点续传**（暂停/继续/取消、刷新续传、不重传已完成分片）、移动端拍照/相册上传、单文件与批量 ZIP 下载、列表/网格视图、搜索、文本在线编辑（30s 自动保存、历史版本与回滚）、图片缩略图（png/jpg/gif/webp/bmp/svg）/ PDF / 音视频（支持拖动进度）/ Markdown / CSV / Office 只读预览、中文与特殊字符文件名全程无乱码、共享链接（权限/密码/有效期/下载次数/访问记录）、**文件夹自助授权**（把自己的文件夹按查看/编辑/下载/上传授权给同事，递归生效，「我的分享」集中管理并可随时撤销）。
 
@@ -131,7 +196,7 @@ location /liteark/ {
 
 详细功能清单见 `docs/功能说明.md`；分册文档：`docs/网盘功能说明.md`（文件、上传下载、预览、共享）、`docs/权限说明.md`（权限模型、角色默认权限、按角色授权）。需求原文见 `LiteArk需求-V1.1.md`。
 
-## 四、数据目录结构
+## 六、数据目录结构
 
 ```
 /opt/liteark/
@@ -146,7 +211,7 @@ location /liteark/ {
 
 备份只需打包 `data/` 目录；迁移只需拷贝 jar + conf + data 到新机器。
 
-## 五、安全建议
+## 七、安全建议
 
 - 生产环境务必修改 `liteark.jwt-secret` 与初始账号密码
 - 后台 `/admin/**` 可在 Nginx 层追加 IP 白名单，或设置 `liteark.admin-ip-whitelist-enabled=true`（已生效，拦截 `/admin/**` 与 `/api/admin/**`）
@@ -155,10 +220,10 @@ location /liteark/ {
 - Office 只读预览双通道：装有 LibreOffice（含 headless）时转 PDF 高保真预览；未装时 docx/xlsx/pptx 自动用 Apache POI 渲染只读 HTML（文字/表格可读，版式简化），旧版 doc/xls/ppt 仍需 LibreOffice。PDF 由浏览器内置阅读器内联显示
 - 预览接口支持 HTTP Range，音视频/大 PDF 可拖动进度；HTML/SVG 内联预览带 CSP sandbox，脚本不会执行
 
-## 六、本版本边界
+## 八、本版本边界
 
 V1.1 曾列出的 10 项未实现能力已补齐 9 项（分片续传、Office 转码只读预览、细粒度 RBAC、版本回滚、自动清理、移动端编辑、共享下载限制、日志导出、IP 白名单/接口文档）。剩余边界：OnlyOffice 在线编辑（需求 Q-11 待定，本期不引入）、文本存储备选模式、amd64/arm64 实机验证记录。详见 `docs/功能说明.md` 的"需求全量对齐与剩余边界"。
 
-## 七、许可证
+## 九、许可证
 
 [MIT](LICENSE) © 2026 BKChuTang
