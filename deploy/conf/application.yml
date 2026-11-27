@@ -35,6 +35,8 @@ liteark:
   temp-dir: ${LITEARK_TEMP_DIR:/opt/liteark/data/temp}
   # 部署时必须替换为长随机字符串
   jwt-secret: ${LITEARK_JWT_SECRET:CHANGE-ME-IN-PRODUCTION-USE-LONG-RANDOM-STRING}
+  # 二次验证密钥与恢复码哈希主密钥，建议独立生成：openssl rand -hex 32
+  totp-master-key: ${LITEARK_TOTP_MASTER_KEY:}
   jwt-expire-ms: 604800000
   max-file-size: 2147483648
   default-quota: 21474836480

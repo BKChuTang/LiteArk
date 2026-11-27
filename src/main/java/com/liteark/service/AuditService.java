@@ -158,6 +158,13 @@ public class AuditService {
         CONFIG_LABELS.put("online_edit_enabled", "在线编辑开关");
         CONFIG_LABELS.put("edit_ext_whitelist", "编辑后缀白名单");
         CONFIG_LABELS.put("office_preview_enabled", "Office 转码预览开关");
+        CONFIG_LABELS.put("totp_global_enabled", "二次验证总开关");
+        CONFIG_LABELS.put("totp_max_attempts", "验证码错误阈值");
+        CONFIG_LABELS.put("totp_lock_minutes", "验证锁定时长");
+        CONFIG_LABELS.put("totp_window", "验证码时间容错窗口");
+        CONFIG_LABELS.put("totp_recovery_count", "恢复码生成数量");
+        CONFIG_LABELS.put("totp_disable_policy", "禁用二次验证处置策略");
+        CONFIG_LABELS.put("trusted_device_ttl_days", "信任设备有效时长");
     }
 
     public static String configLabel(String key) {

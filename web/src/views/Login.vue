@@ -55,11 +55,13 @@ import { User, Lock } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import { authApi } from '../api'
 import { useUserStore } from '../stores/user'
+import { useTotpPendingStore } from '../stores/totpPending'
 import BrandLogo from '../components/BrandLogo.vue'
 
 const router = useRouter()
 const route = useRoute()
 const store = useUserStore()
+const pending = useTotpPendingStore()
 const formRef = ref()
 const form = reactive({ username: '', password: '' })
 const rules = {
@@ -73,6 +75,12 @@ async function onLogin() {
   loading.value = true
   try {
     const res = await authApi.login(form)
+    if (res.data.needTotp) {
+      pending.start(res.data.pendingToken, res.data.username, route.query.redirect || '', res.data.trustedDeviceTtlDays)
+      router.push('/totp')
+      return
+    }
+    pending.clear()
     store.setLogin(res.data.token, res.data.user)
     ElMessage.success('登录成功')
     router.push(route.query.redirect || (res.data.user.role_id === 1 ? '/admin/overview' : '/files'))

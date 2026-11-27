@@ -9,6 +9,8 @@ import com.liteark.entity.User;
 import com.liteark.mapper.RoleMapper;
 import com.liteark.mapper.UserMapper;
 import com.liteark.security.CurrentUser;
+import com.liteark.service.TotpService;
+import com.liteark.util.ClientUtil;
 import com.liteark.util.JwtUtil;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,7 @@ public class AuthController extends BaseController {
     private final JwtUtil jwtUtil;
     private final LiteArkProperties props;
     private final CurrentUser current;
+    private final TotpService totpService;
 
     @Data
     public static class LoginReq {
@@ -61,11 +64,22 @@ public class AuthController extends BaseController {
             auditFor(u, "登录失败", "账号：" + req.getUsername(), "密码不正确", "fail");
             throw new BizException("账号或密码错误");
         }
-        u.setLastLogin(now());
-        userMapper.updateById(u);
-        auditFor(u, "登录", "账号：" + u.getUsername(),
-                com.liteark.service.AuditService.client(com.liteark.util.ClientUtil.clientType(request)) + "登录");
-        return R.ok(tokenPayload(u));
+        if (totpService.isEnabled(u.getId())) {
+            int expired = totpService.purgeExpiredDevices(u.getId());
+            if (expired > 0) {
+                auditFor(u, "信任设备过期", "账号：" + u.getUsername(), "已自动清理 " + expired + " 条过期信任设备");
+            }
+            if (!totpService.isTrusted(u.getId(), request)) {
+                Map<String, Object> pending = new HashMap<>();
+                pending.put("needTotp", true);
+                pending.put("pendingToken", jwtUtil.generatePending(u.getId(), u.getUsername()));
+                pending.put("username", u.getUsername());
+                pending.put("trustedDeviceTtlDays", totpService.configInt("trusted_device_ttl_days", 30));
+                auditFor(u, "登录", "账号：" + u.getUsername(), "密码校验通过，待二次验证");
+                return R.ok(pending);
+            }
+        }
+        return R.ok(finishLogin(u));
     }
 
     @PostMapping("/register")
@@ -103,6 +117,8 @@ public class AuthController extends BaseController {
         m.put("role_name", role == null ? "" : role.getName());
         m.put("quota", u.getQuota());
         m.put("used", u.getUsed() == null ? 0 : u.getUsed());
+        m.put("totp_enabled", totpService.isEnabled(u.getId()));
+        m.put("totp_allowed", totpService.allowed(u) ? 1 : 0);
         return R.ok(m);
     }
 
@@ -126,6 +142,14 @@ public class AuthController extends BaseController {
         u.setNickname(nickname);
         userMapper.updateById(u);
         return R.ok();
+    }
+
+    private Map<String, Object> finishLogin(User u) {
+        u.setLastLogin(now());
+        userMapper.updateById(u);
+        auditFor(u, "登录", "账号：" + u.getUsername(),
+                com.liteark.service.AuditService.client(ClientUtil.clientType(request)) + "登录");
+        return tokenPayload(u);
     }
 
     private Map<String, Object> tokenPayload(User u) {

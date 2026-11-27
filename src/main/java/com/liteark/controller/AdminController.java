@@ -10,6 +10,7 @@ import com.liteark.entity.*;
 import com.liteark.mapper.*;
 import com.liteark.security.CurrentUser;
 import com.liteark.service.PermissionService;
+import com.liteark.service.TotpService;
 import com.liteark.util.FileUtil;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,7 @@ public class AdminController extends BaseController {
     private final LiteArkProperties props;
     private final FileUtil fileUtil;
     private final PermissionService permService;
+    private final TotpService totpService;
 
     private void admin() { current.requireAdmin(); }
 
@@ -63,6 +65,7 @@ public class AdminController extends BaseController {
         private Long roleId;
         private Long quota;
         private Integer status;
+        private Integer totpAllowed;
     }
 
     @GetMapping("/users")
@@ -82,6 +85,8 @@ public class AdminController extends BaseController {
             m.put("status", u.getStatus());
             m.put("created_at", u.getCreatedAt());
             m.put("last_login", u.getLastLogin());
+            m.put("totp_allowed", totpService.allowed(u) ? 1 : 0);
+            m.put("totp_enabled", totpService.isEnabled(u.getId()) ? 1 : 0);
             list.add(m);
         }
         return R.ok(list);
@@ -103,6 +108,7 @@ public class AdminController extends BaseController {
         u.setQuota(req.getQuota() == null || req.getQuota() <= 0 ? props.getDefaultQuota() : req.getQuota());
         u.setUsed(0L);
         u.setStatus(req.getStatus() == null ? 1 : req.getStatus());
+        u.setTotpAllowed(req.getTotpAllowed() == null ? 1 : (req.getTotpAllowed() == 1 ? 1 : 0));
         userMapper.insert(u);
         audit("新增用户", "账号：" + req.getUsername(),
                 "角色：" + auditService.roleName(u.getRoleId()));
@@ -151,9 +157,118 @@ public class AdminController extends BaseController {
         }
         fileMapper.delete(new LambdaQueryWrapper<FileMeta>().eq(FileMeta::getOwnerId, id));
         shareMapper.delete(new LambdaQueryWrapper<Share>().eq(Share::getOwnerId, id));
+        totpService.reset(id);
         userMapper.deleteById(id);
         audit("删除用户", "账号：" + u.getUsername(), "该账号及其名下文件已一并清除");
         return R.ok(null, "用户已删除");
+    }
+
+    // ===== 二次验证管理 =====
+    @Data
+    public static class Verification {
+        private String type;
+        private String code;
+    }
+
+    @Data
+    public static class TotpAllowedReq {
+        private Boolean allowed;
+        private Verification verification;
+    }
+
+    @Data
+    public static class TotpBatchReq {
+        private List<Long> ids;
+        private Boolean allowed;
+        private Verification verification;
+    }
+
+    @Data
+    public static class TotpResetReq {
+        private Verification verification;
+    }
+
+    @PutMapping("/users/{id}/totp/allowed")
+    public R<Void> setTotpAllowed(@PathVariable Long id, @RequestBody TotpAllowedReq req) {
+        admin();
+        User u = userMapper.selectById(id);
+        if (u == null) throw new BizException(404, "用户不存在");
+        if (req.getAllowed() == null) throw new BizException("请选择开通或禁止");
+        verifySelf(req.getVerification(), false);
+        int val = Boolean.TRUE.equals(req.getAllowed()) ? 1 : 0;
+        u.setTotpAllowed(val);
+        userMapper.updateById(u);
+        boolean unbound = false;
+        if (val == 0 && "B".equals(totpService.disablePolicy())) {
+            unbound = totpService.reset(id);
+        }
+        audit("设置二次验证权限", "账号：" + u.getUsername(),
+                (val == 1 ? "允许该账号自主开启二次验证" : "禁止该账号开启二次验证")
+                        + (unbound ? "，已按策略 B 解除原有绑定" : "，原有绑定按策略 A 保留"));
+        return R.ok(null, "保存成功");
+    }
+
+    @PostMapping("/users/totp/allowed/batch")
+    public R<Map<String, Object>> batchTotpAllowed(@RequestBody TotpBatchReq req) {
+        admin();
+        if (req.getIds() == null || req.getIds().isEmpty()) throw new BizException("请至少选择一名用户");
+        if (req.getAllowed() == null) throw new BizException("请选择开通或禁止");
+        verifySelf(req.getVerification(), false);
+        int val = Boolean.TRUE.equals(req.getAllowed()) ? 1 : 0;
+        Set<Long> ids = new LinkedHashSet<>(req.getIds());
+        int unbound = 0;
+        for (Long id : ids) {
+            User u = userMapper.selectById(id);
+            if (u == null) continue;
+            u.setTotpAllowed(val);
+            userMapper.updateById(u);
+            if (val == 0 && "B".equals(totpService.disablePolicy()) && totpService.reset(id)) unbound++;
+        }
+        audit("批量设置二次验证权限", "用户：" + ids.size() + " 名",
+                (val == 1 ? "批量允许开启二次验证" : "批量禁止开启二次验证")
+                        + (unbound > 0 ? "，已按策略 B 解除 " + unbound + " 个账号的绑定" : ""));
+        Map<String, Object> m = new HashMap<>();
+        m.put("count", ids.size());
+        m.put("unbound", unbound);
+        return R.ok(m);
+    }
+
+    @PostMapping("/users/{id}/totp/reset")
+    public R<Void> resetTotp(@PathVariable Long id, @RequestBody TotpResetReq req) {
+        admin();
+        User u = userMapper.selectById(id);
+        if (u == null) throw new BizException(404, "用户不存在");
+        verifySelf(req.getVerification(), true);
+        boolean had = totpService.reset(id);
+        audit("重置二次验证", "账号：" + u.getUsername(),
+                had ? "已清除密钥、恢复码与全部信任设备，该账号登录不再要求二次验证"
+                        : "已清理该账号的二次验证残留数据");
+        return R.ok(null, "已重置二次验证");
+    }
+
+    /** 管理员本人已开启二次验证时，敏感操作必须先完成动态验证码核验。 */
+    private void verifySelf(Verification v, boolean allowRecovery) {
+        User me = current.get();
+        if (!totpService.isEnabled(me.getId())) return;
+        if (v == null || v.getCode() == null || v.getCode().trim().isEmpty()) {
+            throw new BizException("请先核验管理员本人的动态验证码");
+        }
+        try {
+            String type = v.getType() == null ? "totp" : v.getType().toLowerCase();
+            if ("recovery".equals(type)) {
+                if (!allowRecovery) throw new BizException("此操作需要输入动态验证码");
+                totpService.consumeRecoveryCode(me, v.getCode());
+            } else if ("totp".equals(type)) {
+                totpService.verifyCode(me, v.getCode());
+            } else {
+                throw new BizException("核验方式不支持");
+            }
+            auditFor(me, "管理员身份核验", "账号：" + me.getUsername(),
+                    "通过" + ("recovery".equals(type) ? "备用恢复码" : "动态验证码") + "完成敏感操作核验");
+        } catch (BizException e) {
+            auditFor(me, "管理员身份核验", "账号：" + me.getUsername(), "身份核验未通过", "fail");
+            throw e;
+        }
     }
 
     // ===== 角色管理 =====

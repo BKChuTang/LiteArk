@@ -18,6 +18,8 @@ public class LiteArkProperties {
     private String filesDir = "./data/files";
     private String tempDir = "./data/temp";
     private String jwtSecret = "liteark-dev-secret-change-me-in-production";
+    /** TOTP 密钥与恢复码哈希的主密钥；留空时由 jwtSecret 派生，生产建议单独配置 */
+    private String totpMasterKey = "";
     private long jwtExpireMs = 604800000L;
     private long maxFileSize = 2147483648L;
     private long defaultQuota = 21474836480L;

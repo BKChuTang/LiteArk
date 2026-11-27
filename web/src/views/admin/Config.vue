@@ -37,6 +37,24 @@
             </el-form-item>
           </el-form>
         </el-card>
+        <el-card header="二次验证配置" style="margin-top:20px">
+          <el-form label-position="top">
+            <el-form-item label="二次验证总开关">
+              <el-switch v-model="cfg.totp_global_enabled" active-value="true" inactive-value="false" />
+            </el-form-item>
+            <el-form-item label="验证码连续错误阈值"><el-input-number v-model="cfg.totp_max_attempts" :min="1" :max="20" /></el-form-item>
+            <el-form-item label="锁定时长（分钟）"><el-input-number v-model="cfg.totp_lock_minutes" :min="1" :max="1440" /></el-form-item>
+            <el-form-item label="时间容错窗口（前后 N 个 30 秒）"><el-input-number v-model="cfg.totp_window" :min="0" :max="5" /></el-form-item>
+            <el-form-item label="恢复码生成数量"><el-input-number v-model="cfg.totp_recovery_count" :min="1" :max="50" /></el-form-item>
+            <el-form-item label="管理员禁用后的处置策略">
+              <el-select v-model="cfg.totp_disable_policy" style="width:100%">
+                <el-option value="A" label="策略 A：保留绑定，登录仍需验证码" />
+                <el-option value="B" label="策略 B：清除密钥并解除绑定" />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="信任设备有效时长（天）"><el-input-number v-model="cfg.trusted_device_ttl_days" :min="1" :max="3650" /></el-form-item>
+          </el-form>
+        </el-card>
         <el-card header="部署说明" style="margin-top:20px">
           <p class="note">外置配置目录：<code>/opt/liteark/conf/</code><br />数据目录：<code>/opt/liteark/data/</code><br />启动：<code>java -jar liteark.jar --spring.config.additional-location=/opt/liteark/conf/</code></p>
         </el-card>
@@ -70,6 +88,13 @@ async function load() {
       office_preview_enabled: r.data.office_preview_enabled || 'true',
       online_edit_enabled: r.data.online_edit_enabled || 'true',
       edit_ext_whitelist: r.data.edit_ext_whitelist || 'txt,md,csv,json,html',
+      totp_global_enabled: r.data.totp_global_enabled || 'false',
+      totp_max_attempts: Number(r.data.totp_max_attempts || 5),
+      totp_lock_minutes: Number(r.data.totp_lock_minutes || 30),
+      totp_window: Number(r.data.totp_window || 1),
+      totp_recovery_count: Number(r.data.totp_recovery_count || 10),
+      totp_disable_policy: r.data.totp_disable_policy || 'A',
+      trusted_device_ttl_days: Number(r.data.trusted_device_ttl_days || 30),
     }
   } catch (e) {}
 }

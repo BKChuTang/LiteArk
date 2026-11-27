@@ -40,7 +40,8 @@ public class SecurityConfig {
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .authorizeRequests()
-                .antMatchers("/api/auth/login", "/api/auth/register", "/api/share/**").permitAll()
+                .antMatchers("/api/auth/login", "/api/auth/register",
+                        "/api/auth/totp/verify-login", "/api/auth/totp/recovery-login", "/api/share/**").permitAll()
                 .antMatchers("/api/admin/**").authenticated()
                 .antMatchers("/api/**").authenticated()
                 .anyRequest().permitAll()

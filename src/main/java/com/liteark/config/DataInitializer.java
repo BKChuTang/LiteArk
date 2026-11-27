@@ -68,6 +68,7 @@ public class DataInitializer implements ApplicationRunner {
         migrate("ALTER TABLE permission ADD COLUMN source_role_id INTEGER DEFAULT NULL");
         migrate("ALTER TABLE share ADD COLUMN share_type TEXT DEFAULT 'external'");
         migrate("ALTER TABLE share ADD COLUMN target_user_ids TEXT DEFAULT ''");
+        migrate("ALTER TABLE user ADD COLUMN totp_allowed INTEGER DEFAULT 1");
         log.info("数据库初始化完成: {}", dbPath.toAbsolutePath());
 
         // 3. 角色
@@ -124,6 +125,13 @@ public class DataInitializer implements ApplicationRunner {
                 {"office_preview_enabled", "true"},// LibreOffice 转码预览开关
                 {"online_edit_enabled", "true"},  // 在线编辑总开关
                 {"edit_ext_whitelist", "txt,md,csv,json,html"}, // 可编辑后缀白名单
+                {"totp_global_enabled", "false"},       // 二次验证总开关
+                {"totp_max_attempts", "5"},             // 验证码连续错误阈值
+                {"totp_lock_minutes", "30"},            // 锁定时长（分钟）
+                {"totp_window", "1"},                   // 时间容错窗口（前后各 N 个 30 秒步长）
+                {"totp_recovery_count", "10"},          // 每次生成的恢复码数量
+                {"totp_disable_policy", "A"},           // 管理员禁用后的处置策略：A 保留绑定 / B 解除绑定
+                {"trusted_device_ttl_days", "30"},      // 信任设备有效时长（天）
         };
         for (String[] kv : defaults) {
             if (configMapper.selectById(kv[0]) == null) {

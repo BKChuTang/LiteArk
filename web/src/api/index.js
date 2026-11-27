@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
 import router from '../router'
+import { deviceId } from '../utils/device'
 
 // 与 vite base 对齐：/liteark/api；根路径部署时为 /api
 const BASE_PATH = import.meta.env.BASE_URL.replace(/\/$/, '')
@@ -11,9 +12,12 @@ function isMobile() {
 }
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('liteark_token')
-  if (token) config.headers.Authorization = 'Bearer ' + token
+  if (!config.skipAuth) {
+    const token = localStorage.getItem('liteark_token')
+    if (token) config.headers.Authorization = 'Bearer ' + token
+  }
   config.headers['X-Client-Type'] = isMobile() ? 'Mobile' : 'PC'
+  config.headers['X-Device-Id'] = deviceId()
   return config
 })
 
@@ -48,6 +52,18 @@ export const authApi = {
   me: () => api.get('/auth/me'),
   changePassword: (d) => api.put('/auth/password', d),
   updateProfile: (d) => api.put('/auth/profile', d),
+}
+
+export const totpApi = {
+  status: () => api.get('/auth/totp/status'),
+  bind: () => api.post('/auth/totp/bind'),
+  verifyBind: (code) => api.post('/auth/totp/bind/verify', { code }),
+  unbind: (d) => api.post('/auth/totp/unbind', d),
+  regenerate: (d) => api.post('/auth/totp/recovery/regenerate', d),
+  devices: () => api.get('/auth/totp/devices'),
+  deleteDevice: (id) => api.delete(`/auth/totp/devices/${id}`),
+  verifyLogin: (d) => api.post('/auth/totp/verify-login', d, { skipAuth: true }),
+  recoveryLogin: (d) => api.post('/auth/totp/recovery-login', d, { skipAuth: true }),
 }
 
 export const fileApi = {
@@ -123,6 +139,9 @@ export const adminApi = {
   updateUser: (id, d) => api.put(`/admin/users/${id}`, d),
   resetPassword: (id, password) => api.put(`/admin/users/${id}/password`, { password }),
   deleteUser: (id) => api.delete(`/admin/users/${id}`),
+  setTotpAllowed: (id, d) => api.put(`/admin/users/${id}/totp/allowed`, d),
+  batchTotpAllowed: (d) => api.post('/admin/users/totp/allowed/batch', d),
+  resetTotp: (id, d) => api.post(`/admin/users/${id}/totp/reset`, d),
   roles: () => api.get('/admin/roles'),
   addRole: (d) => api.post('/admin/roles', d),
   updateRole: (id, d) => api.put(`/admin/roles/${id}`, d),

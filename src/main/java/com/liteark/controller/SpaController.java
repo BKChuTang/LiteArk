@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class SpaController {
 
     @GetMapping(value = {
-            "/", "/login", "/files", "/shares", "/recycle", "/profile",
+            "/", "/login", "/totp", "/files", "/shares", "/recycle", "/profile",
             "/admin", "/admin/**", "/s/**", "/recent"
     })
     public String index() {

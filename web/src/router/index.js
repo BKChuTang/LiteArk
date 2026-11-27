@@ -3,6 +3,7 @@ import { useUserStore } from '../stores/user'
 
 const routes = [
   { path: '/login', name: 'login', component: () => import('../views/Login.vue'), meta: { public: true } },
+  { path: '/totp', name: 'totp', component: () => import('../views/TotpVerify.vue'), meta: { public: true, title: '二次验证' } },
   { path: '/s/:token', name: 'share', component: () => import('../views/ShareAccess.vue'), meta: { public: true } },
   {
     path: '/',

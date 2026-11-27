@@ -33,7 +33,8 @@ public class JwtFilter extends OncePerRequestFilter {
             String q = req.getParameter("token");
             if (StringUtils.hasText(q)) token = q;
         }
-        if (token != null) {
+        // 二次验证中间态令牌只用于验证码接口，不能当作已登录凭证
+        if (token != null && !jwtUtil.isPending(token)) {
             try {
                 Long uid = jwtUtil.userId(token);
                 UsernamePasswordAuthenticationToken auth =

@@ -19,4 +19,6 @@ public class User {
     private Integer status;
     private String createdAt;
     private String lastLogin;
+    /** 管理员维护的单用户二次验证开通权限；1 允许，0 禁止 */
+    private Integer totpAllowed = 1;
 }

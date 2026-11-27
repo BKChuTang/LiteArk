@@ -2,8 +2,8 @@
   "meta": {
     "system": "轻舟 LiteArk V1.1",
     "base_url": "http://localhost:8080",
-    "start": "2026-11-26 08:36:44",
-    "end": "2026-11-26 08:36:46",
+    "start": "2026-11-27 11:52:59",
+    "end": "2026-11-27 11:53:01",
     "total": 96,
     "passed": 96,
     "failed": 0,
@@ -22,7 +22,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:45"
+      "time": "11:53:00"
     },
     {
       "id": "M1-02",
@@ -35,7 +35,7 @@
       "http": 200,
       "code": 1,
       "remark": "",
-      "time": "08:36:45"
+      "time": "11:53:00"
     },
     {
       "id": "M1-03",
@@ -48,7 +48,7 @@
       "http": 200,
       "code": 1,
       "remark": "",
-      "time": "08:36:45"
+      "time": "11:53:00"
     },
     {
       "id": "M1-04",
@@ -56,12 +56,12 @@
       "title": "注册成功且角色为普通用户",
       "endpoint": "POST /api/auth/register",
       "expected": "code=0，role_id=2",
-      "actual": "code=0, user={'role_name': '普通用户', 'role_id': 2, 'quota': 21474836480, 'nickname': '自动化注册', 'id': 19, 'used': 0, 'username': 'qa_auto_5359'}",
+      "actual": "code=0, user={'role_name': '普通用户', 'role_id': 2, 'quota': 21474836480, 'nickname': '自动化注册', 'id': 24, 'used': 0, 'username': 'qa_auto_8201'}",
       "result": "PASS",
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:45"
+      "time": "11:53:00"
     },
     {
       "id": "M1-05",
@@ -74,7 +74,7 @@
       "http": 200,
       "code": 1,
       "remark": "",
-      "time": "08:36:45"
+      "time": "11:53:00"
     },
     {
       "id": "M1-06",
@@ -87,7 +87,7 @@
       "http": 200,
       "code": 1,
       "remark": "",
-      "time": "08:36:45"
+      "time": "11:53:00"
     },
     {
       "id": "M1-07",
@@ -95,12 +95,12 @@
       "title": "获取当前用户信息",
       "endpoint": "GET /api/auth/me",
       "expected": "code=0，返回 username/quota/used",
-      "actual": "code=0, data={'role_name': '普通用户', 'role_id': 2, 'quota': 21474836480, 'nickname': '测试-owner', 'id': 10, 'used': 5714, 'username': 'qa_owner'}",
+      "actual": "code=0, data={'role_name': '普通用户', 'role_id': 2, 'totp_enabled': False, 'quota': 21474836480, 'nickname': '测试-owner', 'id': 10, 'used': 5713, 'totp_allowed': 1, 'username': 'qa_owner'}",
       "result": "PASS",
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:45"
+      "time": "11:53:00"
     },
     {
       "id": "M1-08",
@@ -113,7 +113,7 @@
       "http": 401,
       "code": 401,
       "remark": "",
-      "time": "08:36:45"
+      "time": "11:53:00"
     },
     {
       "id": "M1-09",
@@ -126,7 +126,7 @@
       "http": 401,
       "code": 401,
       "remark": "",
-      "time": "08:36:45"
+      "time": "11:53:00"
     },
     {
       "id": "M1-10",
@@ -139,7 +139,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:45"
+      "time": "11:53:00"
     },
     {
       "id": "M1-11",
@@ -152,7 +152,7 @@
       "http": 200,
       "code": 1,
       "remark": "",
-      "time": "08:36:45"
+      "time": "11:53:00"
     },
     {
       "id": "M1-12",
@@ -165,7 +165,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:45"
+      "time": "11:53:00"
     },
     {
       "id": "M2-01",
@@ -178,7 +178,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:45"
+      "time": "11:53:00"
     },
     {
       "id": "M2-02",
@@ -191,7 +191,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:45"
+      "time": "11:53:00"
     },
     {
       "id": "M2-03",
@@ -204,7 +204,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:45"
+      "time": "11:53:00"
     },
     {
       "id": "M2-04",
@@ -217,7 +217,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:45"
+      "time": "11:53:00"
     },
     {
       "id": "M2-05",
@@ -225,12 +225,12 @@
       "title": "目录信息与所有者展示",
       "endpoint": "GET /api/files/folder-info",
       "expected": "code=0，含 perms/ownerName",
-      "actual": "code=0, data={'folderId': 319, 'perms': ['view', 'edit', 'download', 'upload', 'share_internal', 'share_external'], 'name': 'QA测试根目录', 'granted': False, 'ownerName': ''}",
+      "actual": "code=0, data={'folderId': 335, 'perms': ['view', 'edit', 'download', 'upload', 'share_internal', 'share_external'], 'name': 'QA测试根目录', 'granted': False, 'ownerName': ''}",
       "result": "PASS",
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:45"
+      "time": "11:53:00"
     },
     {
       "id": "M2-06",
@@ -243,7 +243,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:45"
+      "time": "11:53:00"
     },
     {
       "id": "M2-07",
@@ -256,7 +256,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:45"
+      "time": "11:53:00"
     },
     {
       "id": "M2-08",
@@ -269,7 +269,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:45"
+      "time": "11:53:00"
     },
     {
       "id": "M2-09",
@@ -282,7 +282,7 @@
       "http": 200,
       "code": 1,
       "remark": "",
-      "time": "08:36:45"
+      "time": "11:53:00"
     },
     {
       "id": "M2-10",
@@ -295,7 +295,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:45"
+      "time": "11:53:00"
     },
     {
       "id": "M2-11",
@@ -308,7 +308,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:45"
+      "time": "11:53:00"
     },
     {
       "id": "M2-12",
@@ -321,7 +321,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:45"
+      "time": "11:53:00"
     },
     {
       "id": "M2-13",
@@ -334,7 +334,7 @@
       "http": 200,
       "code": null,
       "remark": "",
-      "time": "08:36:45"
+      "time": "11:53:00"
     },
     {
       "id": "M2-14",
@@ -347,7 +347,7 @@
       "http": 200,
       "code": null,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:00"
     },
     {
       "id": "M3-01",
@@ -360,7 +360,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:00"
     },
     {
       "id": "M3-02",
@@ -368,12 +368,12 @@
       "title": "初始化分片任务",
       "endpoint": "POST /api/upload/init",
       "expected": "code=0，返回 uploadId",
-      "actual": "code=0, uploadId=3cc4bc885c4240fe8c9c7328977dd865, 分片数=3",
+      "actual": "code=0, uploadId=8508273da0ba4520ba841d6c7d748983, 分片数=3",
       "result": "PASS",
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:00"
     },
     {
       "id": "M3-03",
@@ -386,7 +386,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:00"
     },
     {
       "id": "M3-04",
@@ -399,7 +399,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:00"
     },
     {
       "id": "M3-05",
@@ -412,7 +412,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M3-06",
@@ -425,7 +425,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M3-07",
@@ -433,12 +433,12 @@
       "title": "合并分片并校验 MD5 落库",
       "endpoint": "POST /api/upload/complete",
       "expected": "code=0，文件 MD5 与源一致",
-      "actual": "complete code=0, data={'size': 2097489, 'name': 'QA分片上传_6955.bin', 'id': 331, 'skipped': False}, 列表命中MD5=True",
+      "actual": "complete code=0, data={'size': 2097489, 'name': 'QA分片上传_4575.bin', 'id': 347, 'skipped': False}, 列表命中MD5=True",
       "result": "PASS",
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M3-08",
@@ -451,7 +451,7 @@
       "http": 200,
       "code": 1,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M3-09",
@@ -464,7 +464,7 @@
       "http": 200,
       "code": 1,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M3-10",
@@ -477,7 +477,7 @@
       "http": 200,
       "code": 0,
       "remark": "取消后 status 仍可查询（符合实现），以 status=done 断言",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M4-01",
@@ -490,7 +490,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M4-02",
@@ -503,7 +503,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M4-03",
@@ -516,7 +516,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M4-04",
@@ -529,7 +529,7 @@
       "http": 200,
       "code": null,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M4-05",
@@ -542,7 +542,7 @@
       "http": 200,
       "code": null,
       "remark": "缩略图实现统一转 JPEG",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M4-06",
@@ -555,7 +555,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M4-07",
@@ -568,7 +568,7 @@
       "http": 200,
       "code": null,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M4-08",
@@ -581,7 +581,7 @@
       "http": 206,
       "code": null,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M5-01",
@@ -589,12 +589,12 @@
       "title": "有权限的非所有者创建外部分享",
       "endpoint": "POST /api/shares",
       "expected": "code=0，返回 token",
-      "actual": "code=0, msg=共享链接已创建, token=615cf53d",
+      "actual": "code=0, msg=共享链接已创建, token=0a5daa3d",
       "result": "PASS",
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M5-02",
@@ -607,7 +607,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M5-03",
@@ -620,7 +620,7 @@
       "http": 200,
       "code": 400,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M5-04",
@@ -633,7 +633,7 @@
       "http": 200,
       "code": 403,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M5-05",
@@ -641,12 +641,12 @@
       "title": "外部分享免登录查看信息",
       "endpoint": "GET /api/share/{token}/info",
       "expected": "code=0，needPassword=false",
-      "actual": "code=0, data={'expires_at': '2026-12-03 08:36:46', 'file': {'ext': 'txt', 'size': 49, 'is_dir': 0, 'name': 'QA测试说明.txt', 'id': 321, 'ownerId': 10, 'isDir': 0}, 'needPassword': False, 'permission': 'download', 'shareType': 'external', 'expiresAt': '2026-12-03 08:36:46', 'downloadCount': 0, 'maxDownloads': 0}",
+      "actual": "code=0, data={'expires_at': '2026-12-04 11:53:01', 'file': {'ext': 'txt', 'size': 49, 'is_dir': 0, 'name': 'QA测试说明.txt', 'id': 337, 'ownerId': 10, 'isDir': 0}, 'needPassword': False, 'permission': 'download', 'shareType': 'external', 'expiresAt': '2026-12-04 11:53:01', 'downloadCount': 0, 'maxDownloads': 0}",
       "result": "PASS",
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M5-06",
@@ -659,7 +659,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M5-07",
@@ -667,12 +667,12 @@
       "title": "密码分享-正确密码",
       "endpoint": "GET /api/share/{token}/info?password=",
       "expected": "needPassword=false",
-      "actual": "code=0, data={'expires_at': '2026-12-03 08:36:46', 'file': {'ext': 'txt', 'size': 49, 'is_dir': 0, 'name': 'QA测试说明.txt', 'id': 321, 'ownerId': 10, 'isDir': 0}, 'needPassword': False, 'permission': 'download', 'shareType': 'external', 'expiresAt': '2026-12-03 08:36:46', 'downloadCount': 0, 'maxDownloads': 0}",
+      "actual": "code=0, data={'expires_at': '2026-12-04 11:53:01', 'file': {'ext': 'txt', 'size': 49, 'is_dir': 0, 'name': 'QA测试说明.txt', 'id': 337, 'ownerId': 10, 'isDir': 0}, 'needPassword': False, 'permission': 'download', 'shareType': 'external', 'expiresAt': '2026-12-04 11:53:01', 'downloadCount': 0, 'maxDownloads': 0}",
       "result": "PASS",
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M5-08",
@@ -685,7 +685,7 @@
       "http": 200,
       "code": 401,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M5-09",
@@ -698,7 +698,7 @@
       "http": 200,
       "code": 403,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M5-10",
@@ -711,7 +711,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M5-11",
@@ -719,12 +719,12 @@
       "title": "共享文件夹逐级浏览",
       "endpoint": "GET /api/share/{token}/list",
       "expected": "code=0，返回子项",
-      "actual": "创建 code=0；列表 code=0, 子项=['删除副本验证', '子目录A', '已重命名目录', '移动目标目录', 'QA分片上传_6955.bin', 'QA图片.png', 'QA多页签.xlsx', 'QA测试说明.txt', 'QA编辑用.txt']",
+      "actual": "创建 code=0；列表 code=0, 子项=['删除副本验证', '子目录A', '已重命名目录', '移动目标目录', 'QA分片上传_4575.bin', 'QA图片.png', 'QA多页签.xlsx', 'QA测试说明.txt', 'QA编辑用.txt']",
       "result": "PASS",
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M5-12",
@@ -737,7 +737,7 @@
       "http": 200,
       "code": 404,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M5-13",
@@ -750,7 +750,7 @@
       "http": 200,
       "code": 403,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M5-14",
@@ -763,7 +763,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M5-15",
@@ -776,7 +776,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M5-16",
@@ -784,12 +784,12 @@
       "title": "共享访问记录",
       "endpoint": "GET /api/shares/{id}/access",
       "expected": "返回记录，含 IP/端类型",
-      "actual": "记录数=1, 首条={'id': 22, 'shareId': 36, 'token': 'cf16df6a995f43d79c82a53629add43f6ba5f13a', 'visitor': '', 'ip': '127.0.0.1', 'ua': 'python-requests/2.34.2', 'clientType': 'PC', 'accessedAt': '2026-11-26 08:36:46'}",
+      "actual": "记录数=1, 首条={'id': 27, 'shareId': 42, 'token': '627718304e914717a8615134e57a8051e8fde197', 'visitor': '', 'ip': '127.0.0.1', 'ua': 'python-requests/2.34.2', 'clientType': 'PC', 'accessedAt': '2026-11-27 11:53:01'}",
       "result": "PASS",
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M5-17",
@@ -797,12 +797,12 @@
       "title": "内部分享候选用户列表",
       "endpoint": "GET /api/shares/users",
       "expected": "排除自己/管理员/禁用用户",
-      "actual": "code=0, 候选=['cs', 'demo', 'lisi', 'qa_auto_5359', 'qa_edit', 'qa_guest', 'qa_owner', 'qa_view']",
+      "actual": "code=0, 候选=['cs', 'demo', 'lisi', 'qa_auto_8201', 'qa_edit', 'qa_guest', 'qa_owner', 'qa_view']",
       "result": "PASS",
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M5-18",
@@ -815,7 +815,7 @@
       "http": 200,
       "code": 403,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M6-01",
@@ -828,7 +828,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M6-02",
@@ -841,7 +841,7 @@
       "http": 200,
       "code": 403,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M6-03",
@@ -854,7 +854,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M6-04",
@@ -867,7 +867,7 @@
       "http": 200,
       "code": 403,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M6-05",
@@ -880,7 +880,7 @@
       "http": 200,
       "code": 403,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M6-06",
@@ -893,7 +893,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M6-07",
@@ -901,12 +901,12 @@
       "title": "角色默认权限查询",
       "endpoint": "GET /api/admin/permissions/role-effective",
       "expected": "code=0，含 perms/userCount",
-      "actual": "code=0, data={'roleId': 2, 'roleName': '普通用户', 'userCount': 8, 'folderId': 319, 'perms': []}",
+      "actual": "code=0, data={'roleId': 2, 'roleName': '普通用户', 'userCount': 8, 'folderId': 335, 'perms': []}",
       "result": "PASS",
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M6-08",
@@ -919,7 +919,7 @@
       "http": 0,
       "code": null,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M6-09",
@@ -932,7 +932,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M6-10",
@@ -945,7 +945,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M6-11",
@@ -958,7 +958,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M6-12",
@@ -971,7 +971,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M6-13",
@@ -984,7 +984,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M7-01",
@@ -997,7 +997,7 @@
       "http": 200,
       "code": 403,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M7-02",
@@ -1005,12 +1005,12 @@
       "title": "系统概览",
       "endpoint": "GET /api/admin/overview",
       "expected": "code=0，含 5 项统计",
-      "actual": "code=0, data={'shares': 4, 'totalSize': 200603427, 'files': 84, 'logs': 1246, 'users': 10}",
+      "actual": "code=0, data={'shares': 4, 'totalSize': 200603426, 'files': 84, 'logs': 1405, 'users': 10}",
       "result": "PASS",
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M7-03",
@@ -1023,7 +1023,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M7-04",
@@ -1031,12 +1031,12 @@
       "title": "后台新增用户",
       "endpoint": "POST /api/admin/users",
       "expected": "code=0，用户与配额正确",
-      "actual": "code=0, 回读={'role_name': '普通用户', 'role_id': 2, 'last_login': None, 'quota': 1073741824, 'nickname': '后台新建', 'created_at': '2026-11-26 08:36:46', 'id': 20, 'used': 0, 'username': 'qa_admin_7482', 'status': 1}",
+      "actual": "code=0, 回读={'role_name': '普通用户', 'role_id': 2, 'last_login': None, 'totp_enabled': 0, 'quota': 1073741824, 'nickname': '后台新建', 'created_at': '2026-11-27 11:53:01', 'id': 25, 'used': 0, 'totp_allowed': 1, 'username': 'qa_admin_4713', 'status': 1}",
       "result": "PASS",
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M7-05",
@@ -1044,12 +1044,12 @@
       "title": "后台修改用户",
       "endpoint": "PUT /api/admin/users/{id}",
       "expected": "code=0，字段更新",
-      "actual": "code=0, 回读={'role_name': '测试', 'role_id': 3, 'last_login': None, 'quota': 2147483648, 'nickname': '后台改名', 'created_at': '2026-11-26 08:36:46', 'id': 20, 'used': 0, 'username': 'qa_admin_7482', 'status': 0}",
+      "actual": "code=0, 回读={'role_name': '测试', 'role_id': 3, 'last_login': None, 'totp_enabled': 0, 'quota': 2147483648, 'nickname': '后台改名', 'created_at': '2026-11-27 11:53:01', 'id': 25, 'used': 0, 'totp_allowed': 1, 'username': 'qa_admin_4713', 'status': 0}",
       "result": "PASS",
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M7-06",
@@ -1062,7 +1062,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M7-07",
@@ -1075,7 +1075,7 @@
       "http": 200,
       "code": 1,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M7-08",
@@ -1088,7 +1088,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M7-09",
@@ -1101,7 +1101,7 @@
       "http": 200,
       "code": 1,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M7-10",
@@ -1114,7 +1114,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M7-11",
@@ -1127,7 +1127,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M7-12",
@@ -1140,7 +1140,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M7-13",
@@ -1148,12 +1148,12 @@
       "title": "操作日志 CSV 导出无敏感信息",
       "endpoint": "GET /api/admin/logs/export",
       "expected": "HTTP 200，不含 token",
-      "actual": "HTTP 200, 大小=16149, 含token=False, 首行=ID,时间,操作人,操作类型,资源,详情,IP,端类型,UA,结果",
+      "actual": "HTTP 200, 大小=24433, 含token=False, 首行=ID,时间,操作人,操作类型,资源,详情,IP,端类型,UA,结果",
       "result": "PASS",
       "http": 200,
       "code": null,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M7-14",
@@ -1161,12 +1161,12 @@
       "title": "系统配置读取",
       "endpoint": "GET /api/admin/config",
       "expected": "code=0，含关键配置",
-      "actual": "code=0, keys=['upload_concurrency_pc', 'office_preview_enabled', 'conflict_strategy', 'default_quota', 'default_share_expire', 'upload_concurrency_mobile', 'edit_ext_whitelist', 'chunk_size_pc']",
+      "actual": "code=0, keys=['upload_concurrency_pc', 'office_preview_enabled', 'totp_disable_policy', 'totp_window', 'totp_lock_minutes', 'conflict_strategy', 'default_quota', 'default_share_expire']",
       "result": "PASS",
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M7-15",
@@ -1179,7 +1179,7 @@
       "http": 200,
       "code": 0,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M8-01",
@@ -1192,7 +1192,7 @@
       "http": 401,
       "code": null,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M8-02",
@@ -1205,7 +1205,7 @@
       "http": 401,
       "code": null,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M8-03",
@@ -1218,7 +1218,7 @@
       "http": 200,
       "code": 403,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M8-04",
@@ -1231,7 +1231,7 @@
       "http": 200,
       "code": 500,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M8-05",
@@ -1244,7 +1244,7 @@
       "http": 200,
       "code": null,
       "remark": "",
-      "time": "08:36:46"
+      "time": "11:53:01"
     },
     {
       "id": "M8-06",
@@ -1257,7 +1257,7 @@
       "http": 200,
       "code": 0,
       "remark": "safeName 将空名兜底为『未命名』，设计如此",
-      "time": "08:36:46"
+      "time": "11:53:01"
     }
   ]
 }

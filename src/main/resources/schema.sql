@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS user (
   status     INTEGER DEFAULT 1,
   created_at TEXT DEFAULT (datetime('now','localtime')),
   last_login TEXT,
+  totp_allowed INTEGER DEFAULT 1,
   FOREIGN KEY (role_id) REFERENCES role(id)
 );
 
@@ -131,3 +132,43 @@ CREATE TABLE IF NOT EXISTS system_config (
   config_key   TEXT PRIMARY KEY,
   config_value TEXT NOT NULL
 );
+
+-- TOTP 二次验证：密钥密文、失败锁定与验证码重放防护
+CREATE TABLE IF NOT EXISTS user_totp (
+  user_id       INTEGER PRIMARY KEY,
+  secret_cipher TEXT NOT NULL DEFAULT '',
+  enabled       INTEGER DEFAULT 0,
+  failed_count  INTEGER DEFAULT 0,
+  locked_until  TEXT,
+  last_used_step INTEGER DEFAULT 0,
+  created_at    TEXT DEFAULT (datetime('now','localtime')),
+  updated_at    TEXT DEFAULT (datetime('now','localtime')),
+  FOREIGN KEY (user_id) REFERENCES user(id)
+);
+
+-- 一次性恢复码：仅保存加盐哈希，不保存明文
+CREATE TABLE IF NOT EXISTS totp_recovery_code (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id    INTEGER NOT NULL,
+  code_hash  TEXT NOT NULL,
+  used       INTEGER DEFAULT 0,
+  used_at    TEXT,
+  batch      TEXT DEFAULT '',
+  created_at TEXT DEFAULT (datetime('now','localtime')),
+  FOREIGN KEY (user_id) REFERENCES user(id)
+);
+CREATE INDEX IF NOT EXISTS idx_totp_recovery_user ON totp_recovery_code(user_id, used);
+
+-- 信任设备：device_hash 为加盐哈希，不保存原始设备标识
+CREATE TABLE IF NOT EXISTS trusted_device (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id     INTEGER NOT NULL,
+  device_hash TEXT NOT NULL,
+  device_name TEXT DEFAULT '',
+  ip          TEXT DEFAULT '',
+  client_type TEXT DEFAULT 'PC',
+  created_at  TEXT DEFAULT (datetime('now','localtime')),
+  expire_at   TEXT,
+  FOREIGN KEY (user_id) REFERENCES user(id)
+);
+CREATE INDEX IF NOT EXISTS idx_trusted_device_user ON trusted_device(user_id, device_hash);

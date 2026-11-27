@@ -31,6 +31,8 @@ liteark:
   temp-dir: ${LITEARK_TEMP_DIR:${liteark.data-dir}/temp}
   # JWT（部署时必须外置覆盖）
   jwt-secret: ${LITEARK_JWT_SECRET:liteark-dev-secret-change-me-in-production}
+  # TOTP 密钥/恢复码哈希的主密钥；留空时由 jwt-secret 派生，生产建议单独配置
+  totp-master-key: ${LITEARK_TOTP_MASTER_KEY:}
   jwt-expire-ms: 604800000
   # 上限：单文件 2GB、个人默认 20GB（需求 §10 Q-08）
   max-file-size: ${LITEARK_MAX_FILE_BYTES:2147483648}
